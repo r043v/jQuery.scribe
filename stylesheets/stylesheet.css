@@ -1,4 +1,3 @@
-body { background: #151515 url("../images/bkg.png") 0 0;  }
 
 body, textarea {
   margin: 0;
@@ -7,7 +6,10 @@ body, textarea {
   font: 16px;
   line-height: 1.5;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  background:none;
 }
+
+body { background: #151515 url("../images/bkg.png") 0 0;  }
 
 /* General & 'Reset' Stuff */
 
