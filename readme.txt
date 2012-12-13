@@ -36,7 +36,7 @@ save, the easy way
 
 scribe let you save in some manner,
 
-easyest way is to let him do the get or post request, on success, editor will be released and original node filled with data
+easyest way is to let him do the get or post request, on success, editor will be released and original node filled with data returned by save.php, if save.php return nothing, editor data will be used
 
 scribe.setSave("post","/save.php");
 
