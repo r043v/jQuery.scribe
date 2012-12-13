@@ -8,6 +8,16 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js"></script>
+    <script type="text/javascript" src="javascripts/jquery.scribe.full.min.js"></script>
+    
+    <script>
+    $(document).ready(function()
+    {  var scribe = $('div.scribe').scribe({wysihtml5:{stylesheets:["stylesheets/editor.css"],parserRules:wysihtml5ParserRules}}).scribe;
+    });
+    </script>
+    
     <title>jquery.scribe by r043v</title>
   </head>
 
@@ -28,7 +38,11 @@
 
     <div class="container">
       <section id="main_content">
-        <p>=)</p>
+        <div class="scribe">hello <i>world</i> !</div>
+        <div class="scribe">hello <i>world</i> !</div>
+        <div class="scribe">hello <i>world</i> !</div>
+        <div class="scribe">hello <i>world</i> !</div>
+        <div class="scribe">hello <i>world</i> !</div>
       </section>
     </div>
 
