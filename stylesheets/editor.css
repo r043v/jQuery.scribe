@@ -7,21 +7,12 @@ body, textarea {
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
 
-section {
-  display: block;
-  margin: 0 0 20px 0;
-}
-
 h1, h2, h3, h4, h5, h6 {
   margin: 0 0 20px;
 }
 
 li {
   line-height: 1.4 ;
-}
-
-section img {
-  max-width: 100%
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -148,18 +139,9 @@ a {
   zoom:1;
 }
 
-
 div, h1, h2, h3, h4, h5, h6, form, label, input, span, ul, li, p, a { margin:0; padding:0; }
 a { text-decoration:none; }
 img { border:none; }
-
-p, li {
-  line-height: 1.5;
-}
-
-p, ul, ol {
-  padding-bottom: 25px;
-}
 
 a {
   color: inherit;
@@ -183,11 +165,6 @@ ul li {
 
 ol li {
   list-style: decimal outside;
-}
-
-li img {
-  vertical-align: middle;
-  margin: 2px 5px 5px 0;
 }
 
 .wysiwyg-color-black {
