@@ -1,0 +1,123 @@
+@font-face {
+  font-family: 'Bree Serif';
+	font-style: normal;
+	font-weight: 400;
+	src: local('Bree Serif'), local('BreeSerif-Regular'), url('http://dread.tk/img/font.woff') format('woff');
+}
+
+html, body, textarea, input {
+  font-family: 'Bree Serif', serif; font-size:14px;
+  color:#f6cfab;
+}
+
+*::selection { background:#240400; color:#fddd16; }
+
+div, h1, h2, h3, h4, h5, h6, form, label, input, span, ul, li, p, a { margin:0; padding:0; }
+a { text-decoration:none; }
+img { border:none; }
+h1, h2, h3, h4, p { font-family: 'Bree Serif', serif; }
+h1 { color:#f6cfab; font-size:2.5em; }
+h2 { color:#502400; font-size:2em; }
+h3 { color:#8a6a08; font-size:1.5em; }
+h4 { color:#240400; font-size:1.2em }
+
+p, li {
+  line-height: 1.5;
+}
+
+p, ul, ol {
+  padding-bottom: 25px;
+}
+
+a {
+  color: inherit;
+}
+
+strong, b {
+  font-weight: bold;
+}
+
+i, em {
+  font-style: italic;
+}
+
+li {
+  margin-left: 30px;
+}
+
+ul li {
+  list-style: disc outside;
+}
+
+ol li {
+  list-style: decimal outside;
+}
+
+li img {
+  vertical-align: middle;
+  margin: 2px 5px 5px 0;
+}
+
+.wysiwyg-color-black {
+  color: black;
+}
+
+.wysiwyg-color-silver {
+  color: silver;
+}
+
+.wysiwyg-color-gray {
+  color: gray;
+}
+
+.wysiwyg-color-white {
+  color: white;
+}
+
+.wysiwyg-color-maroon {
+  color: maroon;
+}
+
+.wysiwyg-color-red {
+  color: red;
+}
+
+.wysiwyg-color-purple {
+  color: purple;
+}
+
+.wysiwyg-color-fuchsia {
+  color: fuchsia;
+}
+
+.wysiwyg-color-green {
+  color: green;
+}
+
+.wysiwyg-color-lime {
+  color: lime;
+}
+
+.wysiwyg-color-olive {
+  color: olive;
+}
+
+.wysiwyg-color-yellow {
+  color: yellow;
+}
+
+.wysiwyg-color-navy {
+  color: navy;
+}
+
+.wysiwyg-color-blue {
+  color: blue;
+}
+
+.wysiwyg-color-teal {
+  color: teal;
+}
+
+.wysiwyg-color-aqua {
+  color: aqua;
+}
