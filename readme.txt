@@ -36,11 +36,13 @@ save, the easy way
 
 scribe let you save in some manner,
 
-easyest way is to let him do the get or post request, on success, editor will be released and original node filled with data returned by save.php, if save.php return nothing, editor data will be used
+easyest way is to let him do the get or post request, on success, editor will be released and original node filled with data returned by server side script, if return nothing, editor data will be used
 
 scribe.setSave("post","/save.php");
 
-as this, save.php only receive "data" var in post, filled with editor html
+scribe.setSave("get","/save.php");
+
+as this, save.php only receive "data" var in post or get, filled with editor html
 
 hey you miss an identifier :/
 you can set an argument more who will be a callback who must return a javascript object with all you need more to make your save
@@ -54,7 +56,7 @@ here we extract "data-md5" atribute from our source div and add his value to wha
 
 save, the second way
 
-you call also set a unique argument at setSave, who will be a function
+you can also set an unique argument to setSave, who will be a function
 
 this function receive 3 args :
 
@@ -62,7 +64,7 @@ this function receive 3 args :
 * original node element to edit, as a jquery object
 * callback to save end
 
-if your function return anything, callback will be not used, and data filled in original node will be your return !
+if your function return anything, callback will not be used, and data filled in original node will be your return !
 
 scribe.setSave(function(data,$this)
 {	var md5 = $this.data("md5"); // our custom editable zone identifier
