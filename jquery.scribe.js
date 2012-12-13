@@ -119,9 +119,8 @@
 					else { $html.attr(str,opt.group).attr( str + '-value',name); }
 				} else 	if(false === childs) {
 					if($.isPlainObject(node))
-					{	$html.attr(str,direct_command);
-						//appendCommand(opt.type,direct_command,$html.attr('title'),$html);
-					} else	$html.attr(str,node);
+						$html.attr(str,direct_command);
+					else	$html.attr(str,node);
 				}
 			}
 			
@@ -130,16 +129,10 @@
 					$.each(childs,function(key,nod){ $ul.append( scribe.parse(nod,opt,key,true) ); });
 					$ul.appendTo($html);
 					opt.group = false;
-			} else {	//appendCommand(opt.type,direct_command,$html.attr('title'),$html);
-					if(opt.type !== undefined && opt.type !== false)
-					{	//appendCommand(opt.type,prop.title,$html.attr('title'),$html);
-						return $html;
-					}
-					//console.log("there is an error in your toolbar syntax.");
-					return $();
+					return $html;
+			} else {	if(opt.type !== undefined && opt.type !== false) return $html;
+					console.log("there is an error in your toolbar syntax."); return $();
 			}
-			
-			return $html;
 		}, init:function(opt)
 		{	if(!$.isPlainObject(opt)) opt = {toolbar:scribe.toolbar,wysihtml5:{}};
 			else {
@@ -153,7 +146,6 @@
 			{	scribe.command = {};
 				$lis.each(function(key,li)
 				{	var $li = $(li);
-					//var data = $li.data();
 					var type = false, cmd = false, value = false, tmp = false;
 					
 					tmp = $li.attr('data-wysihtml5-command');
@@ -266,7 +258,7 @@
 				scribe.ifrmContent = scribe.ifrmContent.find("html").css({width:"100%",height:"100%",margin:0,padding:0,overflow:"hidden"}).find("body").css({height:"auto",width:"100%",margin:0,padding:0,backgroundColor:'',background:'none'});
 				
 				scribe.editorCommands = new wysihtml5.Commands(scribe.editor);
-				scribe.isSelection = function(n){ return scribe.editorCommands.state(n) !== false; };
+				scribe.isSelection = function(n){ var s = scribe.editorCommands.state(n); return (s !== false && s !== null); };
 
 				scribe.$scribe.hide().css({visibility:"visible",overflow:"visible"});
 				
@@ -320,11 +312,17 @@
 			scribe.resize();
 		}, selectionChange:function()
 		{	
-			//console.log("is bold ? "+scribe.isSelection("bold")); <--- next step
+		  
+			$.each(scribe.command.command,function(cmd,v)
+			{	//console.log("is bold ? "+scribe.isSelection("bold")); // <--- next step
+				if( true === scribe.isSelection(cmd) )
+				{	console.log("this is in "+v.name+" ("+cmd+")");
+				}
+			});
+			
 		  
 		}, resize:function(opt) // resize the composer view, will accept min value, callback and additional resizer/style
-		{	//if(scribe.attach === false) return;
-			if(opt !== undefined)
+		{	if(opt !== undefined)
 			{	if(opt.min === undefined) opt.min=16;
 				if(opt.minx === undefined) opt.minx=16;
 				if(opt.src === undefined) opt.src = scribe.$current;
