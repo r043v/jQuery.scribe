@@ -9,6 +9,10 @@ This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAl
 
 -----------------------------------------------
 
+simple demo can be find here http://r043v.github.com/jQuery.scribe/ :)
+
+-----------------------------------------------
+
 to use jquery.scribe plugin you need :
 
 * latest jQuery
