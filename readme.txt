@@ -9,6 +9,10 @@ This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAl
 
 -----------------------------------------------
 
+simple demo can be find here http://r043v.github.com/jQuery.scribe/ :)
+
+-----------------------------------------------
+
 to use jquery.scribe plugin you need :
 
 * latest jQuery
@@ -89,9 +93,7 @@ here, original editable node will receive the return of your post request if you
 bugs,
 
 * chrome not fix iframe content position at top when animate
-* firefox not use the same line height of original div
 * first position of editor will be bad if done when page is scrolled down, next are goods
-* iframe body not keep transparent background
 
 -----------------------------------------------
 
