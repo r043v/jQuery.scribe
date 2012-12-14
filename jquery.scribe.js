@@ -50,8 +50,8 @@
 				if($.isPlainObject(node.icon))
 				{	$.extend(true,opt,{icon:node.icon});
 					if(undefined !== node.icon.url)
-					{	if(undefined !== opt.class) opt.class += '-'+name; else opt.class="icon-"+name;
-						scribe.$css.append('.'+opt.class+' { background-image:url('+node.icon.url+'); }');
+					{	if(undefined !== opt.klass) opt.klass += '-'+name; else opt.klass="icon-"+name;
+						scribe.$css.append('.'+opt.klass+' { background-image:url('+node.icon.url+'); }');
 					}
 				}
 				
@@ -107,7 +107,7 @@
 			{	var i = opt.icon;
 				if(i.x !== 0 || 0 !== i.y) // draw icon, [0,0] mean no icon
 				{	opt.css.backgroundPosition = (-i.x*i.sx)+"px "+(-i.y*i.sy)+"px";
-					$html.css(opt.css).addClass(opt.class);
+					$html.css(opt.css).addClass(opt.klass);
 				} else	$html.css(opt.css);
 			}
 			
@@ -212,7 +212,7 @@
 			//{ var c = scribe.$command;
 			scribe.$command = $('<div/>',{id:"scribe-command"}).css({background:"none"}); // container for document specific icons
 			scribe.$command.$icon   = $("<div/>").css({backgroundPosition:"-48px 0",top:0,right:0}).show(); // tool icon
-			scribe.$command.$switch = $("<div/>",{title:"change view"}).css({backgroundPosition:"-32px 0",display:"none"}).click(function(){ scribe.switch(); }); // switch view button
+			scribe.$command.$switch = $("<div/>",{title:"change view"}).css({backgroundPosition:"-32px 0",display:"none"}).click(function(){ scribe.switchMe(); }); // switch view button
 			scribe.$command.$save   = $("<div/>",{title:"save"}).css({backgroundPosition:"0 0",display:"none"}).click(function(){ scribe.save(); }); // save button
 			scribe.$command.$cancel = $("<div/>",{title:"cancel"}).css({backgroundPosition:"-16px 0",display:"none"}).click(function(){ scribe.release(); }); // cancel edit button			
 			scribe.$command.append(scribe.$command.$icon)
@@ -337,7 +337,7 @@
 			if(opt.minx > opt.data.width) opt.data.width = opt.minx; // apply min width
 			scribe.$scribe.add(opt.src).stop().animate(opt.data,function(){ if(false !== opt.callback) opt.callback(); }); // and animate targets
 			return opt.data.height; // return future height
-		}, switch:function(view) // call a scribe switch view
+		}, switchMe:function(view) // call a scribe switch view
 		{	if(false === scribe.view) scribe.view='composer';
 			view = (undefined !== view)?view:(scribe.view === "composer")?"source":(scribe.view === "source")?"composer":false;
 			if(view === false) return;
