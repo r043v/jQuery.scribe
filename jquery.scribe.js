@@ -101,7 +101,7 @@
 			if(undefined === opt.icon.x) opt.icon.x = 0;
 			if(undefined === opt.icon.y) opt.icon.y = 0;
 			
-			if(isinit !== undefined) var $html = $('<li/>',prop); else var $html = $('<div/>',{id:name+'-toolbar'});
+			if(isinit !== undefined) var $html = $('<li/>',prop); else var $html = $('<div/>',{id:name+'-toolbar-commands'});
 			
 			if(opt.icon !== undefined)
 			{	var i = opt.icon;
@@ -161,7 +161,7 @@
 							if(tmp !== undefined) value = tmp;	
 						} else {
 							tmp = $li.attr('data-wysihtml5-command-group');
-							if(tmp !== undefined) { type = 'command'; cmd = tmp; } else return;
+							if(tmp !== undefined) { type = 'command'; cmd = tmp; } else { $li.remove(); return; }
 						}
 					}	//if(type&cmd === false) return;
 					
@@ -171,11 +171,11 @@
 					
 					if(scribe.command[type] === undefined) scribe.command[type] = {};
 					if(scribe.command[type][cmd] === undefined)
-						scribe.command[type][cmd] = {name:title,$:$().add($li)};
+						scribe.command[type][cmd] = {name:title,'$':$li};
 					else
 					{	scribe.command[type][cmd].name = title;
-						scribe.command[type][cmd].$.add($li);
-					}	//console.log(type+':'+cmd+':'+title);
+						scribe.command[type][cmd]['$'] = $li;
+					}	console.log(type+':'+cmd+':'+title+' jquery : '+scribe.command[type][cmd]['$']);
 				});
 			}
 
@@ -183,11 +183,14 @@
 			scribe.toolbar.icon.url = scribe.icons.toolbar;
 			
 			// load &| create a toolbar 
-			scribe.$toolbar = (opt.toolbar instanceof jQuery)?opt.toolbar:($.isPlainObject(opt.toolbar))?scribe.parse(opt.toolbar):(undefined !== opt.toolbar.substring)?$(opt.toolbar):false;
-			if(!(scribe.$toolbar instanceof jQuery)) { console.log("i need a toolbar !"); return this; }
+			scribe.$toolbarCommands = (opt.toolbar instanceof jQuery)?opt.toolbar:($.isPlainObject(opt.toolbar))?scribe.parse(opt.toolbar):(undefined !== opt.toolbar.substring)?$(opt.toolbar):false;
+			if(!(scribe.$toolbarCommands instanceof jQuery)) { console.log("i need a toolbar !"); return this; }
 			
-			// extract from this one commands, atributed icon and title
-			parseToolbar(scribe.$toolbar.find('li[data-wysihtml5-command],li[data-wysihtml5-command-group],li[data-wysihtml5-action]'));
+			// copie toolbar icons to access and move them without touch original's
+			scribe.$toolbarIcons = scribe.$toolbarCommands.find('li[data-wysihtml5-command],li[data-wysihtml5-command-group],li[data-wysihtml5-action]').clone(false);
+			
+			// extract from these one's, commands, atributed icon and title
+			parseToolbar(scribe.$toolbarIcons);
 			
 			// include some css in head
 			scribe.$css.append("\n\
@@ -195,21 +198,22 @@
 #scribe:hover, #scribe > *:focus { box-shadow: 1px 1px 10px white; }\
 #scribe { z-index:999; position:absolute; margin:0; padding:0; width:0; height:0; overflow: visible !important; }\n\
 #scribe > *, #scribe > * > * { position:absolute; top:0; right:0; margin:0; padding:0; height:100%; width:100%; background-color:''; }\n\
-#scribe-command, #scribe-command > div { height:16px; width:16px; position:absolute; top:0; background:url("+scribe.icons.commands+"); }\
+#scribe-command, #scribe-command > div { height:16px; width:16px; position:absolute; top:0; background:url("+scribe.icons.commands+"); cursor:pointer; }\
 #scribe-command { z-index:9; overflow:visible; height:16px; width:16px; }\n\
 #scribe-source { z-index:7; overflow:hidden; }\n\
-#scribe-toolbar { z-index:6; }\n\
+#scribe-toolbar { z-index:6; height:16px; /*min-width:16px;*/ opacity:0; width:0; background:white; border-radius:2px; left:0; top:-16px; }\n\
+//#scribe-toolbar > * { float:left; }\n\
+#scribe-toolbar-current { left:0; position:absolute; height:16px; overflow:hidden; list-style-type:none; width:0; } \n\
+#scribe-toolbar-current > li { list-style-type:none; height:16px; width:16px; float:left; } \n\
 #scribe-editor { z-index:5; overflow:hidden; }\n\
-#scribe-toolbar { width:128px; height:32px; right:32px; background:red; }\n\
-\n\
-#scribe-toolbar * { width:16px; height:16px; list-style-type: none; float:left; }\n\
-#scribe-toolbar li { width:16px; height:16px; }\n\
-#scribe-toolbar ul { width:auto; height:auto; }\n\
-#scribe-toolbar ul ul { display:none; }\n\
-");
+#scribe-toolbar-commands { width:16px; height:16px; right:0; display:none; }\n");/*
+#scribe-toolbar-commands * , #scribe-toolbar-current * { width:16px; height:16px; list-style-type: none; float:left; }\n\
+#scribe-toolbar-commands li, #scribe-toolbar-current li { width:16px; height:16px; }\n\
+#scribe-toolbar-commands ul, #scribe-toolbar-current ul { width:auto; height:auto; }\n\
+#scribe-toolbar-commands ul ul, #scribe-toolbar-current ul ul { display:none; }\n\
+");*/
 			// create the needed html
 			scribe.$scribe = $('<div/>',{id:"scribe"}).css("overflow","visible"); // master div
-			//{ var c = scribe.$command;
 			scribe.$command = $('<div/>',{id:"scribe-command"}).css({background:"none"}); // container for document specific icons
 			scribe.$command.$icon   = $("<div/>").css({backgroundPosition:"-48px 0",top:0,right:0}).show(); // tool icon
 			scribe.$command.$switch = $("<div/>",{title:"change view"}).css({backgroundPosition:"-32px 0",display:"none"}).click(function(){ scribe.switchMe(); }); // switch view button
@@ -242,11 +246,16 @@
 			scribe.$editor = $('<div/>',{id:"scribe-editor"});
 			scribe.$textarea = $('<textarea/>',{id:"scribe-textarea",spellcheck:"false",wrap:"off",placeholder:""}).val("hello").css({border:0,backgroundColor:''}).appendTo(scribe.$editor);
 			
+			scribe.$toolbar = $('<div/>',{id:"scribe-toolbar"});
+			scribe.$toolbarCurrent = $('<ul/>',{id:"scribe-toolbar-current"});
+			//scribe.$toolbarCurrent.append( $('<div/>',{id:"scribe-toolbar"}).width(16).height(16).css({backgroundColor:"blue"}) );
+			scribe.$toolbarCurrent.add(scribe.$toolbarCommands).appendTo(scribe.$toolbar);
+			
 			// append all of that and push it into the dom !
 			scribe.$scribe.append(scribe.$source.hide(),scribe.$editor,scribe.$toolbar.hide(),scribe.$command).width(0).height(0).css({overflow:"hidden",visibility:"hidden"}).appendTo('body');
 			
 			scribe.wysihtml5_opt.toolbar = "wysihtml5-toolbar"; // set toolbar id
-			scribe.$toolbar.children("ul").attr("id",scribe.wysihtml5_opt.toolbar);
+			scribe.$toolbarCommands.children("ul").attr("id",scribe.wysihtml5_opt.toolbar);
 			scribe.editor = new wysihtml5.Editor("scribe-textarea",scribe.wysihtml5_opt); // init wysihtml5
 			scribe.editor.on("external_change_view",function(v){ scribe.on_switch(v); }); // place switch view event
 			scribe.$host = this; // mean $('div.scribe')
@@ -265,8 +274,8 @@
 				// place some event
 				scribe.editor.composer.element.addEventListener("keyup",scribe.onChange);
 				scribe.editor.on("aftercommand:composer", scribe.onChange);
+				scribe.editor.composer.element.addEventListener("mouseup",scribe.selectionChange);
 				scribe.editor.composer.element.addEventListener("click",scribe.selectionChange);
-				
 				
 				// affect edit event
 				scribe.$host.addClass('scribe').on('click',function()
@@ -283,9 +292,7 @@
 		}, onChange:function()
 		{	scribe.resize();
 			scribe.selectionChange();
-		}, wait:function(test,callback,n) // a bad wait function :)
-		{	if(n === undefined) n=1; if(true !== test() && n < 99) window.setTimeout(function(){ scribe.wait(test,callback,n+1); },15*n); else callback();
-		}, edit:function($e) // edit a div !
+		}, edit:function($e) // edit an element !
 		{	if($e === undefined) $e = $(this);
 		
 			if(scribe.$current !== false) // anybody else in edition ?
@@ -295,6 +302,7 @@
 				return; // and bye
 			}
 	
+			scribe.$toolbar.show();
 			scribe.ifrmContent.css('background-color','');
 
 			scribe.$current = $e; // current target div
@@ -310,17 +318,31 @@
 			scribe.$textarea.val(data)
 			scribe.editor.setValue(data,true);
 			scribe.resize();
+			
+			scribe.ifrmContent.focus(); // auto focus the body of iframe
+			scribe.$toolbarCurrentWidth = 1; // will force a width animate refresh
+			scribe.selectionChange();
+			//scribe.editor.on('blur',scribe.save); // auto save and release on blur
 		}, selectionChange:function()
-		{	
-		  
+		{	scribe.$currentIcons = $();
 			$.each(scribe.command.command,function(cmd,v)
-			{	//console.log("is bold ? "+scribe.isSelection("bold")); // <--- next step
-				if( true === scribe.isSelection(cmd) )
-				{	console.log("this is in "+v.name+" ("+cmd+")");
+			{	if( true === scribe.isSelection(cmd) )
+				{	//console.log("this is in "+v.name+" ("+cmd+") jquery:"+(v.$ instanceof jQuery)+" ("+v.$.length+")");
+					scribe.$currentIcons = scribe.$currentIcons.add(v.$);
 				}
 			});
 			
-		  
+			// in dom node will get "indom" class for not made million append/detach/animate on caret move
+			scribe.$toolbarIcons.not(scribe.$currentIcons).filter('.indom').removeClass('indom').stop().width(16).animate({width:0},300,function(){ $(this).detach(); });
+			scribe.$currentIcons.not('.indom').addClass('indom').stop().width(0).appendTo(scribe.$toolbarCurrent).animate({width:16},300);
+			
+			var newCurrentWidth = scribe.$currentIcons.length * 16;
+			if(newCurrentWidth !== scribe.$toolbarCurrentWidth)
+			{	var opacity = 1; if(newCurrentWidth === 0) opacity=0;
+				scribe.$toolbarCurrentWidth = newCurrentWidth;
+				scribe.$toolbarCurrent.stop().animate({width:newCurrentWidth},300);
+				scribe.$toolbar.stop().animate({width:newCurrentWidth,opacity:opacity});
+			}
 		}, resize:function(opt) // resize the composer view, will accept min value, callback and additional resizer/style
 		{	if(opt !== undefined)
 			{	if(opt.min === undefined) opt.min=16;
