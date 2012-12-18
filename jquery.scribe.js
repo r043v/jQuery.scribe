@@ -30,6 +30,15 @@
 							"aligné à droite":{command:"justifyRight",icon:{x:0}}
 					  }
 					},
+				heading:{ icon:{y:3,x:3}, title:"heading!", group:"formatBlock",command:{
+						h1:{icon:{x:0}},
+						h2:{icon:{x:1}},
+						h3:{icon:{x:2}},
+						h4:{icon:{x:3}},
+						h5:{icon:{x:4}},
+						h6:{icon:{x:5}}
+					  }
+					},
 				bgColor:{ title:"couleur du texte", icon:{x:1,y:0}, group:"foreColor", command:{
 						bleu:{ icon:{x:0,y:0},  css:{background:"blue"} },
 						pink:{ title:'rose',icon:{x:0,y:0},  css:{background:"#ff00ff"} },
@@ -37,6 +46,62 @@
 					}
 				}
 			}
+		}, getSelection:function($e)
+		{	
+			function getRange()
+			{	if (window.getSelection) return window.getSelection().getRangeAt(0);
+				//return document.selection.createRange();
+				return false;
+			}
+
+			var range = getRange(); if(range === false) return false;
+
+			function getTreeOffset($root,$node)
+			{	if($node.parents($root).length === 0) return false; // is node child of root ?
+				var tree = [], treesize = 0;
+				do {	//var index = $node.index();
+					var index = $node.parent().contents().index($node);
+			
+					if(index < 0) break;
+					tree[treesize++] = index;
+					$node = $node.parent();
+				} while(!$node.is($root));
+				return tree.reverse();
+			}
+			
+			var start = getTreeOffset($e,$(range.startContainer));
+			var end   = getTreeOffset($e,$(range.endContainer));
+			
+			if(start & end === false) return false;
+			
+			return {start:start,end:end,startOffset:range.startOffset,endOffset:range.endOffset};
+		}, setSelection:function($e,s,win)
+		{	$e.focus();
+			
+			if(s === false) return;
+
+			var sel = win.getSelection();
+			sel.removeAllRanges();
+
+			function getNode($e,s)
+			{	var node = $e;
+				for( var n=0;n<s.length;n++ )
+				{	var c = node.contents();
+					//console.log("move to children "+s[n]+" on "+c.length);
+					if(c.length > 0) node = c.eq(s[n]);//node.contents().filter(":nth-child("+s[n]+")");//node = c.eq(s[n]);//':eq('+s[n]+')');
+					//else console.log("no children !");
+					//if(node.length === 0) console.log("bad node, FUCK!");
+				}
+				return node.get(0);
+			}
+			
+			var start = getNode($e,s.start);
+			var end   = getNode($e,s.end);
+			
+			var range = win.document.createRange();
+			range.setStart(start,s.startOffset);
+			range.setEnd(end,s.endOffset);
+			sel.addRange(range);
 		}, parse:function(node,opt,name,isinit) // toolbar object to html
 		{	if(undefined === name) name = scribe.name;
 			
@@ -131,7 +196,7 @@
 					opt.group = false;
 					return $html;
 			} else {	if(opt.type !== undefined && opt.type !== false) return $html;
-					console.log("there is an error in your toolbar syntax."); return $();
+					//console.log("there is an error in your toolbar syntax."); return $();
 			}
 		}, init:function(opt)
 		{	if(!$.isPlainObject(opt)) opt = {toolbar:scribe.toolbar,wysihtml5:{}};
@@ -158,36 +223,49 @@
 						if(tmp  !== undefined)
 						{	type = 'action'; cmd = tmp;
 							tmp = $li.attr('data-wysihtml5-action-value');
-							if(tmp !== undefined) value = tmp;	
+							if(tmp !== undefined) value = tmp;
 						} else {
 							tmp = $li.attr('data-wysihtml5-command-group');
 							if(tmp !== undefined) { type = 'command'; cmd = tmp; } else { $li.remove(); return; }
+							//$li.remove();
 						}
 					}	//if(type&cmd === false) return;
 					
-					if(value !== false) return; // only groups & direct command/action allowed, not group part
+					//if(value !== false) return; // only groups & direct command/action allowed, not group part
 					
 					var title = $li.attr('title');
 					
 					if(scribe.command[type] === undefined) scribe.command[type] = {};
-					if(scribe.command[type][cmd] === undefined)
-						scribe.command[type][cmd] = {name:title,'$':$li};
+					
+					if(value === false)
+					{	if(scribe.command[type][cmd] === undefined)
+							scribe.command[type][cmd] = {name:title,'$':$li};
+						else
+						{	scribe.command[type][cmd].name = title;
+							scribe.command[type][cmd]['$'] = $li;
+						}
+						//console.log(type+':'+cmd+':'+title+' jquery : '+scribe.command[type][cmd]['$']);
+					}
 					else
-					{	scribe.command[type][cmd].name = title;
-						scribe.command[type][cmd]['$'] = $li;
-					}	console.log(type+':'+cmd+':'+title+' jquery : '+scribe.command[type][cmd]['$']);
+					{	if(scribe.command[type][cmd] === undefined)
+							scribe.command[type][cmd] = {group:true};
+						scribe.command[type][cmd][value] = {name:title,'$':$li};
+						//console.log(type+':'+cmd+':'+value+':'+title+' jquery : '+scribe.command[type][cmd][value]['$']);
+					}
 				});
 			}
 
 			// set default icons set for toolbar the internal one
 			scribe.toolbar.icon.url = scribe.icons.toolbar;
 			
+			var icon_sx = scribe.toolbar.icon.sx;
+			
 			// load &| create a toolbar 
 			scribe.$toolbarCommands = (opt.toolbar instanceof jQuery)?opt.toolbar:($.isPlainObject(opt.toolbar))?scribe.parse(opt.toolbar):(undefined !== opt.toolbar.substring)?$(opt.toolbar):false;
 			if(!(scribe.$toolbarCommands instanceof jQuery)) { console.log("i need a toolbar !"); return this; }
 			
 			// copie toolbar icons to access and move them without touch original's
-			scribe.$toolbarIcons = scribe.$toolbarCommands.find('li[data-wysihtml5-command],li[data-wysihtml5-command-group],li[data-wysihtml5-action]').clone(false);
+			scribe.$toolbarIcons = scribe.$toolbarCommands.find('li[data-wysihtml5-command],li[data-wysihtml5-action]').clone(false); //,li[data-wysihtml5-command-group]
 			
 			// extract from these one's, commands, atributed icon and title
 			parseToolbar(scribe.$toolbarIcons);
@@ -203,8 +281,8 @@
 #scribe-source { z-index:7; overflow:hidden; }\n\
 #scribe-toolbar { z-index:6; height:16px; /*min-width:16px;*/ opacity:0; width:0; background:white; border-radius:2px; left:0; top:-16px; }\n\
 //#scribe-toolbar > * { float:left; }\n\
-#scribe-toolbar-current { left:0; position:absolute; height:16px; overflow:hidden; list-style-type:none; width:0; } \n\
-#scribe-toolbar-current > li { list-style-type:none; height:16px; width:16px; float:left; } \n\
+#scribe-toolbar-current { left:0; position:absolute; height:"+icon_sx+"px; overflow:hidden; list-style-type:none; width:0; } \n\
+#scribe-toolbar-current > li { list-style-type:none; height:"+icon_sx+"px; width:"+icon_sx+"px; float:left; } \n\
 #scribe-editor { z-index:5; overflow:hidden; }\n\
 #scribe-toolbar-commands { width:16px; height:16px; right:0; display:none; }\n");/*
 #scribe-toolbar-commands * , #scribe-toolbar-current * { width:16px; height:16px; list-style-type: none; float:left; }\n\
@@ -256,6 +334,13 @@
 			
 			scribe.wysihtml5_opt.toolbar = "wysihtml5-toolbar"; // set toolbar id
 			scribe.$toolbarCommands.children("ul").attr("id",scribe.wysihtml5_opt.toolbar);
+			
+			// before init wysihtml5 copy all div style to textarea
+			
+			var $firstDiv = $(this).first();
+			scribe.copyCss($firstDiv,scribe.$textarea,scribe.BOX_FORMATTING);
+			scribe.copyCss($firstDiv,scribe.$textarea,scribe.TEXT_FORMATTING);
+			
 			scribe.editor = new wysihtml5.Editor("scribe-textarea",scribe.wysihtml5_opt); // init wysihtml5
 			scribe.editor.on("external_change_view",function(v){ scribe.on_switch(v); }); // place switch view event
 			scribe.$host = this; // mean $('div.scribe')
@@ -267,7 +352,7 @@
 				scribe.ifrmContent = scribe.ifrmContent.find("html").css({width:"100%",height:"100%",margin:0,padding:0,overflow:"hidden"}).find("body").css({height:"auto",width:"100%",margin:0,padding:0,backgroundColor:'',background:'none'});
 				
 				scribe.editorCommands = new wysihtml5.Commands(scribe.editor);
-				scribe.isSelection = function(n){ var s = scribe.editorCommands.state(n); return (s !== false && s !== null); };
+				scribe.isSelection = function(n,v){ var s = scribe.editorCommands.state(n,v); /*console.log("command "+n+" value:"+v+" return : "+s);*/ return (s !== false && s !== null); };
 
 				scribe.$scribe.hide().css({visibility:"visible",overflow:"visible"});
 				
@@ -278,8 +363,16 @@
 				scribe.editor.composer.element.addEventListener("click",scribe.selectionChange);
 				
 				// affect edit event
-				scribe.$host.addClass('scribe').on('click',function()
-				{	scribe.edit($(this));
+				scribe.$host.addClass('scribe').hover(function()
+				{ $(this).attr('contenteditable','true');
+				},function()
+				{ $(this).removeAttr('contenteditable');
+				}).mouseup(function()
+				{	var t = $(this);
+					var sel = scribe.getSelection(t);
+					t.removeAttr('contenteditable');
+
+					scribe.edit(t,sel);
 				});
 				
 				console.log("hello scribe !");
@@ -292,18 +385,23 @@
 		}, onChange:function()
 		{	scribe.resize();
 			scribe.selectionChange();
-		}, edit:function($e) // edit an element !
+		}, edit:function($e,sel) // edit an element !
 		{	if($e === undefined) $e = $(this);
 		
 			if(scribe.$current !== false) // anybody else in edition ?
 			{	if(scribe.onRelease !== false) return;
-				scribe.onRelease = function(){ scribe.edit($e); }; // editor saved and released callback
+				scribe.onRelease = function(){ scribe.edit($e,sel); }; // editor saved and released callback
 				scribe.save(); // call save
 				return; // and bye
 			}
 	
+			//console.log($e.css('text-align'));
+	
+			scribe.copyCss($e,scribe.ifrm,scribe.BOX_FORMATTING);
+			scribe.copyCss($e,scribe.ifrmContent,scribe.TEXT_FORMATTING);
+
 			scribe.$toolbar.show();
-			scribe.ifrmContent.css('background-color','');
+			//scribe.ifrmContent.css('background-color','');
 
 			scribe.$current = $e; // current target div
 			var off = $e.offset(), $w=$(window); off.hh = $e.outerHeight(); off.ww = $e.outerWidth(); // get div sizes & position
@@ -318,18 +416,28 @@
 			scribe.$textarea.val(data)
 			scribe.editor.setValue(data,true);
 			scribe.resize();
+
+			scribe.setSelection(scribe.ifrmContent,sel,scribe.ifrm[0].contentWindow);
 			
-			scribe.ifrmContent.focus(); // auto focus the body of iframe
 			scribe.$toolbarCurrentWidth = 1; // will force a width animate refresh
 			scribe.selectionChange();
 			//scribe.editor.on('blur',scribe.save); // auto save and release on blur
 		}, selectionChange:function()
 		{	scribe.$currentIcons = $();
 			$.each(scribe.command.command,function(cmd,v)
-			{	if( true === scribe.isSelection(cmd) )
-				{	//console.log("this is in "+v.name+" ("+cmd+") jquery:"+(v.$ instanceof jQuery)+" ("+v.$.length+")");
-					scribe.$currentIcons = scribe.$currentIcons.add(v.$);
-				}
+			{	//if(undefined !== v.value
+				if(undefined === v.group)
+				{	if( true === scribe.isSelection(cmd) )
+					{	//console.log("this is in "+v.name+" ("+cmd+") jquery:"+(v.$ instanceof jQuery)+" ("+v.$.length+")");
+						scribe.$currentIcons = scribe.$currentIcons.add(v.$);
+					}
+				} else	$.each(scribe.command.command[cmd],function(val,z)
+					{	
+						if(val !== 'group' && true === scribe.isSelection(cmd,val) )
+						{	//console.log("this is in "+z.name+" ("+cmd+")");
+							scribe.$currentIcons = scribe.$currentIcons.add(z.$);
+						}
+					});
 			});
 			
 			// in dom node will get "indom" class for not made million append/detach/animate on caret move
@@ -386,7 +494,7 @@
 					scribe.ace.setValue(data);
 					scribe.ace.clearSelection();
 					scribe.$editor.hide();
-					scribe.$command.stop().animate({marginRight:18}).mouseleave();
+					scribe.$command.stop().animate({marginTop:18}).mouseleave();
 					scribe.resize({min:scribe.sourceMinHeight,minx:scribe.sourceMinWidth,src:scribe.$source,data:{opacity:1},callback:function()
 					{	scribe.ace.resize();
 					}});
@@ -398,7 +506,7 @@
 				{	scribe.$textarea.val(scribe.ace.getValue()); scribe.ace.setValue("");
 					scribe.$editor.show();
 					scribe.$source.animate({height:scribe.$current.height(),width:scribe.$current.width(),opacity:0},function(){	$(this).hide().css({height:"100%"}); });
-					scribe.$command.stop().animate({marginRight:0}).mouseleave();
+					scribe.$command.stop().animate({marginTop:0}).mouseleave();
 					window.setTimeout(scribe.resize,50);
 				} else	scribe.resize();
 			}
@@ -462,7 +570,35 @@
 			scribe.$textarea.val(eh);
 			scribe.$current = $c;
 			scribe.save();
-		}
+		}, copyCss:function($s,$d,$l)
+		{	var css = {}; for( var n=0;n<$l.length;n++){ c = $l[n]; css[c] = $s.css(c); } $d.css(css);
+		}, TEXT_FORMATTING : [
+		"background-color",
+		"color", "cursor",
+		"font-family", "font-size", "font-style", "font-variant", "font-weight",
+		"line-height", "letter-spacing",
+		"text-align", "text-decoration", "text-indent", "text-rendering",
+		"word-break", "word-wrap", "word-spacing"
+		], BOX_FORMATTING : [
+		"background-color",
+		"border-collapse",
+		"border-bottom-color", "border-bottom-style", "border-bottom-width",
+		"border-left-color", "border-left-style", "border-left-width",
+		"border-right-color", "border-right-style", "border-right-width",
+		"border-top-color", "border-top-style", "border-top-width",
+		"clear", "display", "float",
+		"margin-bottom", "margin-left", "margin-right", "margin-top",
+		"outline-color", "outline-offset", "outline-width", "outline-style",
+		"padding-left", "padding-right", "padding-top", "padding-bottom",
+		"position", "top", "left", "right", "bottom", "z-index",
+		"vertical-align", "text-align",
+		"-webkit-box-sizing", "-moz-box-sizing", "-ms-box-sizing", "box-sizing",
+		"-webkit-box-shadow", "-moz-box-shadow", "-ms-box-shadow","box-shadow",
+		"-webkit-border-top-right-radius", "-moz-border-radius-topright", "border-top-right-radius",
+		"-webkit-border-bottom-right-radius", "-moz-border-radius-bottomright", "border-bottom-right-radius",
+		"-webkit-border-bottom-left-radius", "-moz-border-radius-bottomleft", "border-bottom-left-radius",
+		"-webkit-border-top-left-radius", "-moz-border-radius-topleft", "border-top-left-radius"
+		]
 	};
 
 	$.fn.scribe = function(method,t){
