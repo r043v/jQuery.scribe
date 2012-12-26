@@ -47,26 +47,18 @@
 				}
 			}
 		}, getSelection:function($e)
-		{	
-			function getRange()
-			{	if (window.getSelection) return window.getSelection().getRangeAt(0);
-				//return document.selection.createRange();
-				return false;
-			}
-
-			var range = getRange(); if(range === false) return false;
+		{	if(undefined === window.getSelection) return false;
+			var range = window.getSelection().getRangeAt(0);
 
 			function getTreeOffset($root,$node)
 			{	if($node.parents($root).length === 0) return false; // is node child of root ?
 				var tree = [], treesize = 0;
-				do {	//var index = $node.index();
-					var index = $node.parent().contents().index($node);
-			
-					if(index < 0) break;
-					tree[treesize++] = index;
-					$node = $node.parent();
-				} while(!$node.is($root));
-				return tree.reverse();
+				while(1)
+				{	if($node.is($root)) break;
+					var index, $parent = $node.parent();
+					index = $parent.contents().index($node);
+					if(index !== -1) { tree[treesize++] = index; } $node = $parent;
+				};	return tree.reverse();
 			}
 			
 			var start = getTreeOffset($e,$(range.startContainer));
@@ -86,13 +78,9 @@
 			function getNode($e,s)
 			{	var node = $e;
 				for( var n=0;n<s.length;n++ )
-				{	var c = node.contents();
-					//console.log("move to children "+s[n]+" on "+c.length);
-					if(c.length > 0) node = c.eq(s[n]);//node.contents().filter(":nth-child("+s[n]+")");//node = c.eq(s[n]);//':eq('+s[n]+')');
-					//else console.log("no children !");
-					//if(node.length === 0) console.log("bad node, FUCK!");
-				}
-				return node.get(0);
+				{	var index = s[n]; if(index < 0) break;
+					node = node.contents(':eq('+index+')');
+				}	return node.get(0);
 			}
 			
 			var start = getNode($e,s.start);
