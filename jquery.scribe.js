@@ -68,12 +68,7 @@
 			
 			return {start:start,end:end,startOffset:range.startOffset,endOffset:range.endOffset};
 		}, setSelection:function($e,s,win)
-		{	$e.focus();
-			
-			if(s === false) return;
-
-			var sel = win.getSelection();
-			sel.removeAllRanges();
+		{	$e.focus(); if(s === false) return; var sel = win.getSelection(); sel.removeAllRanges();
 
 			function getNode($e,s)
 			{	var node = $e;
@@ -83,13 +78,8 @@
 				}	return node.get(0);
 			}
 			
-			var start = getNode($e,s.start);
-			var end   = getNode($e,s.end);
-			
-			var range = win.document.createRange();
-			range.setStart(start,s.startOffset);
-			range.setEnd(end,s.endOffset);
-			sel.addRange(range);
+			var start = getNode($e,s.start), end = getNode($e,s.end), range = win.document.createRange();
+			range.setStart(start,s.startOffset); range.setEnd(end,s.endOffset); sel.addRange(range);
 		}, parse:function(node,opt,name,isinit) // toolbar object to html
 		{	if(undefined === name) name = scribe.name;
 			
@@ -270,7 +260,7 @@
 #scribe-toolbar { z-index:6; height:16px; /*min-width:16px;*/ opacity:0; width:0; background:white; border-radius:2px; left:0; top:-16px; }\n\
 //#scribe-toolbar > * { float:left; }\n\
 #scribe-toolbar-current { left:0; position:absolute; height:"+icon_sx+"px; overflow:hidden; list-style-type:none; width:0; } \n\
-#scribe-toolbar-current > li { list-style-type:none; height:"+icon_sx+"px; width:"+icon_sx+"px; float:left; } \n\
+#scribe-toolbar-current > li { list-style-type:none; height:"+icon_sx+"px; width:"+icon_sx+"px; float:left; cursor:pointer; } \n\
 #scribe-editor { z-index:5; overflow:hidden; }\n\
 #scribe-toolbar-commands { width:16px; height:16px; right:0; display:none; }\n");/*
 #scribe-toolbar-commands * , #scribe-toolbar-current * { width:16px; height:16px; list-style-type: none; float:left; }\n\
@@ -314,6 +304,15 @@
 			
 			scribe.$toolbar = $('<div/>',{id:"scribe-toolbar"});
 			scribe.$toolbarCurrent = $('<ul/>',{id:"scribe-toolbar-current"});
+			
+			scribe.$toolbarCurrent.on('click','li',function()
+			{	var t = $(this);
+				var cmd = t.attr('data-wysihtml5-command');
+				var value = t.attr('data-wysihtml5-command-value');
+				scribe.editor.composer.commands.exec(cmd,value);
+				scribe.ifrmContent.focus();
+			});
+			
 			//scribe.$toolbarCurrent.append( $('<div/>',{id:"scribe-toolbar"}).width(16).height(16).css({backgroundColor:"blue"}) );
 			scribe.$toolbarCurrent.add(scribe.$toolbarCommands).appendTo(scribe.$toolbar);
 			
