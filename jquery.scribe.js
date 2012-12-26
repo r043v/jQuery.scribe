@@ -558,7 +558,8 @@
 			scribe.$current = $c;
 			scribe.save();
 		}, copyCss:function($s,$d,$l)
-		{	var css = {}; for( var n=0;n<$l.length;n++){ c = $l[n]; css[c] = $s.css(c); } $d.css(css);
+		{	if(jQuery.fn.jquery >= "1.9") $d.css($s.css($l));
+			else	{ var css = {}; for( var n=0;n<$l.length;n++){ c = $l[n]; css[c] = $s.css(c); } $d.css(css); }
 		}, TEXT_FORMATTING : [
 		"background-color",
 		"color", "cursor",
