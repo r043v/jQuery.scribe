@@ -133,7 +133,7 @@
 				if(node.child !== undefined) { childs = node.child; if($.isEmptyObject(childs)) childs = false; }
 				
 				if(undefined !== node.type) opt.type = node.type;
-					
+
 				if($.isPlainObject(node.prop)) { prop = node.prop; prop.title = name; }
 					
 				delete node.icon; delete node.prop; delete node.style; delete node.group;
@@ -174,7 +174,7 @@
 					opt.group = false;
 					return $html;
 			} else {	if(opt.type !== undefined && opt.type !== false) return $html;
-					//console.log("there is an error in your toolbar syntax."); return $();
+					console.log("there is an error in your toolbar syntax."); return $();
 			}
 		}, init:function(opt)
 		{	if(!$.isPlainObject(opt)) opt = {toolbar:scribe.toolbar,wysihtml5:{}};
@@ -188,8 +188,7 @@
 			function parseToolbar($lis)
 			{	scribe.command = {};
 				$lis.each(function(key,li)
-				{	var $li = $(li);
-					var type = false, cmd = false, value = false, tmp = false;
+				{	var $li = $(li), type = false, cmd = false, value = false, tmp = false;
 					
 					tmp = $li.attr('data-wysihtml5-command');
 					if(tmp !== undefined)
@@ -205,11 +204,8 @@
 						} else {
 							tmp = $li.attr('data-wysihtml5-command-group');
 							if(tmp !== undefined) { type = 'command'; cmd = tmp; } else { $li.remove(); return; }
-							//$li.remove();
 						}
-					}	//if(type&cmd === false) return;
-					
-					//if(value !== false) return; // only groups & direct command/action allowed, not group part
+					}
 					
 					var title = $li.attr('title');
 					
@@ -222,13 +218,11 @@
 						{	scribe.command[type][cmd].name = title;
 							scribe.command[type][cmd]['$'] = $li;
 						}
-						//console.log(type+':'+cmd+':'+title+' jquery : '+scribe.command[type][cmd]['$']);
 					}
 					else
 					{	if(scribe.command[type][cmd] === undefined)
 							scribe.command[type][cmd] = {group:true};
 						scribe.command[type][cmd][value] = {name:title,'$':$li};
-						//console.log(type+':'+cmd+':'+value+':'+title+' jquery : '+scribe.command[type][cmd][value]['$']);
 					}
 				});
 			}
@@ -319,8 +313,8 @@
 			// append all of that and push it into the dom !
 			scribe.$scribe.append(scribe.$source.hide(),scribe.$editor,scribe.$toolbar.hide(),scribe.$command).width(0).height(0).css({overflow:"hidden",visibility:"hidden"}).appendTo('body');
 			
-			scribe.wysihtml5_opt.toolbar = "wysihtml5-toolbar"; // set toolbar id
-			scribe.$toolbarCommands.children("ul").attr("id",scribe.wysihtml5_opt.toolbar);
+			//scribe.wysihtml5_opt.toolbar = "wysihtml5-toolbar"; // set toolbar id
+			scribe.$toolbarCommands.children("ul").attr("id","wysihtml5-toolbar");//scribe.wysihtml5_opt.toolbar);
 			
 			// before init wysihtml5 copy all div style to textarea
 			
