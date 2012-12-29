@@ -239,7 +239,7 @@
 			if(!(scribe.$toolbarCommands instanceof jQuery)) { scribe.log("i need a toolbar !"); return this; }
 			
 			// copie toolbar icons to access and move them without touch original's
-			scribe.$toolbarIcons = scribe.$toolbarCommands.find('li[data-wysihtml5-command],li[data-wysihtml5-action]').clone(false); //,li[data-wysihtml5-command-group]
+			scribe.$toolbarIcons = scribe.$toolbarCommands.find('li[data-wysihtml5-command],li[data-wysihtml5-action]').clone(false);
 			
 			// extract from these one's, commands, atributed icon and title
 			parseToolbar(scribe.$toolbarIcons);
@@ -257,7 +257,8 @@
 #scribe-toolbar-current { left:16px; position:absolute; height:"+icon_sx+"px; overflow:hidden; list-style-type:none; width:0; } \n\
 #scribe-toolbar-current > li { list-style-type:none; height:"+icon_sx+"px; width:"+icon_sx+"px; float:left; cursor:pointer; } \n\
 #scribe-editor { z-index:5; overflow:hidden; }\n\
-#scribe-toolbar-commands { width:16px; height:16px; left:0; display:block; }\n");
+#scribe-toolbar-commands { width:16px; height:16px; left:0; display:block; }\n\
+#scribe-toolbar-full { display:none; }");
 			// create the needed html
 			scribe.$scribe = $('<div/>',{id:"scribe"}).css("overflow","visible"); // master div
 			scribe.$command = $('<div/>',{id:"scribe-command"}).css({background:"none"}); // container for document specific icons
@@ -308,7 +309,7 @@
 			// append all of that and push it into the dom !
 			scribe.$scribe.append(scribe.$source.hide(),scribe.$editor,scribe.$toolbar.hide(),scribe.$command).width(0).height(0).css({overflow:"hidden",visibility:"hidden"}).appendTo('body');
 			
-			scribe.$toolbarCommands.show().children("ul").attr("id","wysihtml5-toolbar");
+			scribe.$toolbarCommands.show().children("ul").attr("id","scribe-toolbar-full");
 			
 			// before init wysihtml5 copy all div style to textarea
 			
