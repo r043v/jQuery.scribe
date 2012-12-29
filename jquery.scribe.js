@@ -11,7 +11,7 @@
 	var scribe = {
 		name:'scribe',version:'eof', sourceMinHeight:111, sourceMinWidth:600,
 		$scribe:false, view:false, editor:false, $textarea:false, $current:false, onRelease:false,
-		ace:false, $ace:false, $toolbar:false, ifrm:false, ifrmContent:false,// attach:false,
+		ace:false, $ace:false, $toolbar:false, ifrm:false, ifrmContent:false,
 		userSave:false, locked:false, wysihtml5_opt:false, command:{}, $css:$('<style/>',{id:"scribe-css"}),
 		icons:{ commands:'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAAAQCAMAAACROYkbAAADAFBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAEAgAKBAEPBgIdDQQlEAVBHQlVJw1uMhCAOhOTQhScRRSlRxKsSA6wSA22SQm5SQi9TAi/TAfEUAjKVQcvZbkwZbkwZbkwZroxZrkxZ7ozaLcyabs8arMzars1arg9bLM8bLM7bLU3bLhAbbA7bbc7brhHb6k3cL43b703b705b7pMcac6cb04cb46cbw5cr46c705c745c786c786c79SdKQ7dMA7dcA6dL87dL87dL+HdGc8db+LeG0+eMBgeqCJeXE/e8OSfGSVfmKNfXRCfsNDgMWYgV5sgaBEgcVFgsaRg3xGg8ZHhMZJhsZXhsNahsRSh8Veh8RKiMdPiMZ6iaBLicdMisdMisdNishNishNislNishOicdmjc1nj89pktFmktWLk6Bkk9hhldpfl92XmZ9dmuCfnqFbnuOkoaCkoaBcoeRbouZbpulaqexYrO9Xr/JWsvXo8fbq8vbr8/fs8/ju9Pn69/X6+/35+/37/P33+vz7+vn1+Pvy9vvw9fnv9Pnu9Pjt9Pjl7vTj7fXh7PXg7PXd6vfa6fnX6PzX5/zV5/3W5/3V5/3U5v3T5vzR5fzQ5fzO5PzM4/zL4vvL4fvJ4fvI4PrG3/rD3fnC3fm+2/i72viz2fmu2Pmp1vmu1va01fC91ebE09zM08vN08jM0cHKz7zDyL2+xMC3v8GxvsdkvfunvM9hvPpmvPlkvPpfu/qdudlcuPlpufWVt95rtvFYtviMtOJXtPdVs/ZvsuyIseFxsOqBreF0reV/q+B3quJ5qeB8qN6joaCioJ+roJWioJ+gn56nn5ikn5qunpGfnp20nYyrl4ikkoSdj39ljMphice7hUWrhlHBhD2ghFfRfzHUfCrZeyPfeRrkehXaeR/leBHreA3pdgnrdAbsdAXrcwPpcQPocATkbQThagTdZgXZYwbTXgbPWgdovojpAAAAjXRSTlMAAAAAAAAAAAAAAAAAAAAAAAQHEyI3RGJzmLHK2ejv8/Ly8Ojv9vb98/b28Pfr+OIc2fkSEhb5FSs1GcDIz/klTcL5vVlicXaINJGhqbK3/vj9+E39+P7+/vj4/m739v719PD9/vv+7vqS7fDx9vf4+Pn+/v78uvz8/Nf87vz6/f39/f39/v7+/v7+/v6ZFk5iAAAAAWJLR0QAiAUdSAAAAoRJREFUOMtdk+9LE3Ecx7+PP/9BEZwGQUcrneZ6tgdiTyI0Ah800AULH0gNywuTGNp8MI/JLubPtEbDY47bds4Y0025QwoGG7q5IWzQk01wkUJGkA/qQZ/vbi5273v0fr2/9/pyD47c7X36nGb43m2o5QI0iA7oKunl3YuLizz/oTCmnUew0ER0QFfJ8GwkFI5E455PhbFOep6CJqIDukqezQWDUnh9w7MWOrhPBRQ0ER3QVWKfWwsEJXljhfe6HlEBBU3E7moCuh0F4mogiMJ4fG5AE4jNxJ6bEjMZ+QLodmKf9/tXRa7IFUc5jqu2AwVIpMh6dGN+EKBrJOf0ZzKZaB00dlWlldjdPp9fPI4LmwImVQUKkASkiLzuHoSeqdyk7JOdOWdaA9q+pYYVZUvlgDzmP6LxSUrgBMEze1AFBD4kYiAYifAWmMq/iSKIO/OOcA1ou5pQEgk1Ye0kFh5P+4dSHrzfIxRsMFADKKgwrYwJehz517Jfnsw79iQp5O2v71uJCatVTVaB9Lv297PZ43RRyxBYXCJNoHJa2a4wl6DLMjkuOvLjsiSFQ28faLuaXLJK4fKyaiUP3+3GYrHq3uEhfZ+zATWiMstUvv/6cXoVoP/VyL5jMFuL16ztJXW5nM2WE2UT6V7ZxdjS00uYhWI3aMZYrHUHP+qsBRoAs+s11GtqWy2XVcV8h7S53mNs6aWTo6OT6aIJ0PgFlZ+Zb2fn539aoQHo47ler1+3S0mlpPR1kh7jTYOBtW3O7GBmDk2AxhVU8hXm5++/1y5DA/C81yu01euEOVmyKh23gGj/sNE2OvaS416YWagZDSzLdjAtzBXcGoBlbxjb/9e+Dlr/AVzbDD5zjLhoAAAAAElFTkSuQmCC',
 			 toolbar:'data:image/png;base64,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'
@@ -80,6 +80,8 @@
 			
 			var start = getNode($e,s.start), end = getNode($e,s.end), range = win.document.createRange();
 			range.setStart(start,s.startOffset); range.setEnd(end,s.endOffset); sel.addRange(range);
+		}, log:function(s)
+		{	if(console !== undefined) console.log(s);
 		}, parse:function(node,opt,name,isinit) // toolbar object to html
 		{	if(undefined === name) name = scribe.name;
 			
@@ -117,7 +119,7 @@
 					  }
 					}
 					  
-					  if($.isPlainObject(node.action))
+					if($.isPlainObject(node.action))
 					{	opt.type = "action";
 						node.child = node.action;
 					} else {
@@ -144,7 +146,7 @@
 			if(undefined === opt.icon.x) opt.icon.x = 0;
 			if(undefined === opt.icon.y) opt.icon.y = 0;
 			
-			if(isinit !== undefined) var $html = $('<li/>',prop); else var $html = $('<div/>',{id:name+'-toolbar-commands'});
+			if(isinit !== undefined) var $html = $('<li/>',prop); else var $html = $('<div/>',{id:name+'-toolbar-commands',class:'icon-scribe'}).css({backgroundPosition:'-96px 0'});
 			
 			if(opt.icon !== undefined)
 			{	var i = opt.icon;
@@ -174,7 +176,7 @@
 					opt.group = false;
 					return $html;
 			} else {	if(opt.type !== undefined && opt.type !== false) return $html;
-					console.log("there is an error in your toolbar syntax."); return $();
+					scribe.log("there is an error in your toolbar syntax."); return $();
 			}
 		}, init:function(opt)
 		{	if(!$.isPlainObject(opt)) opt = {toolbar:scribe.toolbar,wysihtml5:{}};
@@ -234,7 +236,7 @@
 			
 			// load &| create a toolbar 
 			scribe.$toolbarCommands = (opt.toolbar instanceof jQuery)?opt.toolbar:($.isPlainObject(opt.toolbar))?scribe.parse(opt.toolbar):(undefined !== opt.toolbar.substring)?$(opt.toolbar):false;
-			if(!(scribe.$toolbarCommands instanceof jQuery)) { console.log("i need a toolbar !"); return this; }
+			if(!(scribe.$toolbarCommands instanceof jQuery)) { scribe.log("i need a toolbar !"); return this; }
 			
 			// copie toolbar icons to access and move them without touch original's
 			scribe.$toolbarIcons = scribe.$toolbarCommands.find('li[data-wysihtml5-command],li[data-wysihtml5-action]').clone(false); //,li[data-wysihtml5-command-group]
@@ -245,23 +247,17 @@
 			// include some css in head
 			scribe.$css.append("\n\
 .scribe:hover { box-shadow: 1px 1px 10px black; }\n\
-#scribe:hover, #scribe > *:focus { box-shadow: 1px 1px 10px white; }\
-#scribe { z-index:999; position:absolute; margin:0; padding:0; width:0; height:0; overflow: visible !important; }\n\
+#scribe { z-index:999; position:absolute; margin:0; padding:0; width:0; height:0; box-shadow: 1px 1px 10px white; overflow: visible !important; }\n\
 #scribe > *, #scribe > * > * { position:absolute; top:0; right:0; margin:0; padding:0; height:100%; width:100%; background-color:''; }\n\
 #scribe-command, #scribe-command > div { height:16px; width:16px; position:absolute; top:0; background:url("+scribe.icons.commands+"); cursor:pointer; }\
 #scribe-command { z-index:9; overflow:visible; height:16px; width:16px; }\n\
 #scribe-source { z-index:7; overflow:hidden; }\n\
 #scribe-toolbar { z-index:6; height:16px; /*min-width:16px;*/ opacity:0; width:0; background:white; border-radius:2px; left:0; top:-16px; }\n\
-//#scribe-toolbar > * { float:left; }\n\
-#scribe-toolbar-current { left:0; position:absolute; height:"+icon_sx+"px; overflow:hidden; list-style-type:none; width:0; } \n\
+#scribe-toolbar * { float:left; list-style-type:none; }\n\
+#scribe-toolbar-current { left:16px; position:absolute; height:"+icon_sx+"px; overflow:hidden; list-style-type:none; width:0; } \n\
 #scribe-toolbar-current > li { list-style-type:none; height:"+icon_sx+"px; width:"+icon_sx+"px; float:left; cursor:pointer; } \n\
 #scribe-editor { z-index:5; overflow:hidden; }\n\
-#scribe-toolbar-commands { width:16px; height:16px; right:0; display:none; }\n");/*
-#scribe-toolbar-commands * , #scribe-toolbar-current * { width:16px; height:16px; list-style-type: none; float:left; }\n\
-#scribe-toolbar-commands li, #scribe-toolbar-current li { width:16px; height:16px; }\n\
-#scribe-toolbar-commands ul, #scribe-toolbar-current ul { width:auto; height:auto; }\n\
-#scribe-toolbar-commands ul ul, #scribe-toolbar-current ul ul { display:none; }\n\
-");*/
+#scribe-toolbar-commands { width:16px; height:16px; left:0; display:block; }\n");
 			// create the needed html
 			scribe.$scribe = $('<div/>',{id:"scribe"}).css("overflow","visible"); // master div
 			scribe.$command = $('<div/>',{id:"scribe-command"}).css({background:"none"}); // container for document specific icons
@@ -299,7 +295,7 @@
 			scribe.$toolbar = $('<div/>',{id:"scribe-toolbar"});
 			scribe.$toolbarCurrent = $('<ul/>',{id:"scribe-toolbar-current"});
 			
-			scribe.$toolbarCurrent.on('click','li',function()
+			scribe.$toolbar.on('click','li',function()
 			{	var t = $(this);
 				var cmd = t.attr('data-wysihtml5-command');
 				var value = t.attr('data-wysihtml5-command-value');
@@ -307,14 +303,12 @@
 				scribe.ifrmContent.focus();
 			});
 			
-			//scribe.$toolbarCurrent.append( $('<div/>',{id:"scribe-toolbar"}).width(16).height(16).css({backgroundColor:"blue"}) );
 			scribe.$toolbarCurrent.add(scribe.$toolbarCommands).appendTo(scribe.$toolbar);
 			
 			// append all of that and push it into the dom !
 			scribe.$scribe.append(scribe.$source.hide(),scribe.$editor,scribe.$toolbar.hide(),scribe.$command).width(0).height(0).css({overflow:"hidden",visibility:"hidden"}).appendTo('body');
 			
-			//scribe.wysihtml5_opt.toolbar = "wysihtml5-toolbar"; // set toolbar id
-			scribe.$toolbarCommands.children("ul").attr("id","wysihtml5-toolbar");//scribe.wysihtml5_opt.toolbar);
+			scribe.$toolbarCommands.show().children("ul").attr("id","wysihtml5-toolbar");
 			
 			// before init wysihtml5 copy all div style to textarea
 			
@@ -323,7 +317,7 @@
 			scribe.copyCss($firstDiv,scribe.$textarea,scribe.TEXT_FORMATTING);
 			
 			scribe.editor = new wysihtml5.Editor("scribe-textarea",scribe.wysihtml5_opt); // init wysihtml5
-			scribe.editor.on("external_change_view",function(v){ scribe.on_switch(v); }); // place switch view event
+			scribe.editor.on("external_change_view",scribe.on_switch); // place switch view event
 			scribe.$host = this; // mean $('div.scribe')
 			scribe.editor.on("load",function(){ // wysihtml5 loaded !
 				// retreve wysihtml5 iframe
@@ -333,8 +327,8 @@
 				scribe.ifrmContent = scribe.ifrmContent.find("html").css({width:"100%",height:"100%",margin:0,padding:0,overflow:"hidden"}).find("body").css({height:"auto",width:"100%",margin:0,padding:0,backgroundColor:'',background:'none'});
 				
 				scribe.editorCommands = new wysihtml5.Commands(scribe.editor);
-				scribe.isSelection = function(n,v){ var s = scribe.editorCommands.state(n,v); /*console.log("command "+n+" value:"+v+" return : "+s);*/ return (s !== false && s !== null); };
-
+				scribe.isSelection = function(n,v){ var s = scribe.editorCommands.state(n,v); return (s !== false && s !== null); };
+				
 				scribe.$scribe.hide().css({visibility:"visible",overflow:"visible"});
 				
 				// place some event
@@ -356,7 +350,7 @@
 					scribe.edit(t,sel);
 				});
 				
-				console.log("hello scribe !");
+				scribe.log("hello scribe !");
 			});
 			
 			scribe.selection = new wysihtml5.Selection(scribe.editor);
@@ -375,14 +369,11 @@
 				scribe.save(); // call save
 				return; // and bye
 			}
-	
-			//console.log($e.css('text-align'));
-	
+
 			scribe.copyCss($e,scribe.ifrm,scribe.BOX_FORMATTING);
 			scribe.copyCss($e,scribe.ifrmContent,scribe.TEXT_FORMATTING);
 
 			scribe.$toolbar.show();
-			//scribe.ifrmContent.css('background-color','');
 
 			scribe.$current = $e; // current target div
 			var off = $e.offset(), $w=$(window); off.hh = $e.outerHeight(); off.ww = $e.outerWidth(); // get div sizes & position
@@ -409,15 +400,10 @@
 			{	//if(undefined !== v.value
 				if(undefined === v.group)
 				{	if( true === scribe.isSelection(cmd) )
-					{	//console.log("this is in "+v.name+" ("+cmd+") jquery:"+(v.$ instanceof jQuery)+" ("+v.$.length+")");
 						scribe.$currentIcons = scribe.$currentIcons.add(v.$);
-					}
 				} else	$.each(scribe.command.command[cmd],function(val,z)
-					{	
-						if(val !== 'group' && true === scribe.isSelection(cmd,val) )
-						{	//console.log("this is in "+z.name+" ("+cmd+")");
+					{	if(val !== 'group' && true === scribe.isSelection(cmd,val) )
 							scribe.$currentIcons = scribe.$currentIcons.add(z.$);
-						}
 					});
 			});
 			
@@ -425,7 +411,7 @@
 			scribe.$toolbarIcons.not(scribe.$currentIcons).filter('.indom').removeClass('indom').stop().width(16).animate({width:0},300,function(){ $(this).detach(); });
 			scribe.$currentIcons.not('.indom').addClass('indom').stop().width(0).appendTo(scribe.$toolbarCurrent).animate({width:16},300);
 			
-			var newCurrentWidth = scribe.$currentIcons.length * 16;
+			var newCurrentWidth = 16 + scribe.$currentIcons.length * 16;
 			if(newCurrentWidth !== scribe.$toolbarCurrentWidth)
 			{	var opacity = 1; if(newCurrentWidth === 0) opacity=0;
 				scribe.$toolbarCurrentWidth = newCurrentWidth;
@@ -460,6 +446,8 @@
 				// check if style_html function from jsbeautifier.org [ https://github.com/einars/js-beautify ] is here, and present a much human parsing
 				var data; if($.isFunction(style_html)) data = style_html(scribe.$textarea.val(),{'indent_size': 1,'indent_char': "\t"}); else data = scribe.$textarea.val();
 				
+				scribe.$toolbar.hide();
+				
 				if(scribe.source === 'ace') // is ace here ?
 				{	scribe.$source.css({opacity:0.1,height:scribe.resize()}).show();
 					// show source div, opacified and resized as source min height or current iframe height
@@ -482,7 +470,7 @@
 				} else	{ scribe.$textarea.val(data); scribe.resize({min:scribe.sourceMinHeight,minx:scribe.sourceMinWidth}); } // else use classic textarea
 			} else {
 				scribe.view = 'composer';
-
+				scribe.$toolbar.show();
 				if(scribe.source === 'ace')
 				{	scribe.$textarea.val(scribe.ace.getValue()); scribe.ace.setValue("");
 					scribe.$editor.show();
@@ -527,11 +515,16 @@
 			{	window.setTimeout(scribe.release,60); return;
 			}
 			
+			// if we are in source, first back to composer
+			if(scribe.view === "source")
+			{	scribe.$toolbar.css({opacity:0});
+				scribe.editor.fire("change_view","composer");
+				window.setTimeout(scribe.release,60); return;
+			}
+			
 			scribe.$current.css({visibility:"",height:""}); // redraw source div
-			if(scribe.view === "source") scribe.editor.fire("change_view","composer");
-
 			scribe.view = false;
-			scribe.$toolbar.hide();
+			scribe.$toolbar.hide().css({opacity:1});
 			scribe.$scribe.hide();
 			scribe.$current = false;
 			var f = false; if($.isFunction(scribe.onRelease)) f = scribe.onRelease; scribe.onRelease = false; if(f !== false) f();
