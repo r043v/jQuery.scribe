@@ -2,7 +2,7 @@
 --- scribe --- an html inline editor --- eof edition ---
  ------------------------------------------------------
 
-© 2012 noferi mickaël (r043v/dph)  ...  noferov@gmail.com  ...  https://github.com/r043v/
+© 2012~2013 noferi mickaël (r043v/dph)  ...  noferov@gmail.com  ...  https://github.com/r043v/
 
 This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
   http://creativecommons.org/licenses/by-nc-sa/3.0/
