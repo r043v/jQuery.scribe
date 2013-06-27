@@ -2,7 +2,7 @@
  * 
  * jQuery.scribe *
  * 
- * © 2012 noferi mickaël (r043v/dph)  ...  noferov@gmail.com  ...  https://github.com/r043v/
+ * © 2012~2013 noferi mickaël (r043v/dph)  ...  noferov@gmail.com  ...  https://github.com/r043v/
  * 
  * This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
  *   http://creativecommons.org/licenses/by-nc-sa/3.0/
@@ -288,7 +288,8 @@
 			// source editor container (currently, ace)
 			scribe.$source = $('<div/>',{id:"scribe-source"});
 			if($.isPlainObject(ace)) // if ace editor detected, use it !
-			{	scribe.source = 'ace';
+			{	//alert("ace");
+				scribe.source = 'ace';
 				scribe.$ace = $("<div/>",{id:"ace-editor"}).appendTo(scribe.$source);
 			} else	scribe.source = 'text';
 			
@@ -340,7 +341,8 @@
 				scribe.ifrm = $(scribe.editor.composer.iframe).css({border:0,backgroundColor:''}).attr("allowTransparency", "true"); // remove his border !
 				scribe.ifrmContent = $(scribe.ifrm[0].contentWindow.document); // select iframe document
 				// apply some css inside, and set ifrmContent as body iframe
-				scribe.ifrmContent = scribe.ifrmContent.find("html").css({width:"100%",height:"100%",margin:0,padding:0,overflow:"hidden"}).find("body").css({height:"auto",width:"100%",margin:0,padding:0,backgroundColor:'',background:'none'});
+				scribe.ifrmHtml = scribe.ifrmContent.find("html").css({width:"100%",height:"100%",margin:0,padding:0,overflow:"hidden"});
+				scribe.ifrmContent = scribe.ifrmHtml.find("body").css({height:"auto",width:"100%",margin:0,padding:0,backgroundColor:'',background:'none'});
 				
 				scribe.editorCommands = new wysihtml5.Commands(scribe.editor);
 				scribe.isSelection = function(n,v){ var s = scribe.editorCommands.state(n,v); return (s !== false && s !== null); };
@@ -386,15 +388,16 @@
 				return; // and bye
 			}
 
-			scribe.copyCss($e,scribe.ifrm,scribe.BOX_FORMATTING);
-			scribe.copyCss($e,scribe.ifrmContent,scribe.TEXT_FORMATTING);
-
 			scribe.$toolbar.show();
 
 			scribe.$current = $e; // current target div
-			var off = $e.offset(), $w=$(window); off.hh = $e.outerHeight(); off.ww = $e.outerWidth(); // get div sizes & position
-			off.top  -= $w.scrollTop();
-			off.left -= $w.scrollLeft();
+			var off = $e.offset(), $w = $(window);
+			
+			//off.top  -= $w.scrollTop();
+			//off.left -= $w.scrollLeft();
+			
+			off.hh = $e.outerHeight();
+			off.ww = $e.outerWidth(); // get div sizes & position
 			
 			$e.css("visibility","hidden"); // hide source div (but keep him in place !)
 			scribe.$scribe.show().height(off.hh).width(off.ww).offset(off); // set same sizes
@@ -403,6 +406,19 @@
 			var data = $e.html();
 			scribe.$textarea.val(data)
 			scribe.editor.setValue(data,true);
+			
+			//scribe.copyCss($e,scribe.ifrm,scribe.BOX_FORMATTING);
+			//scribe.copyCss($e,scribe.ifrm,scribe.TEXT_FORMATTING);
+			
+			//scribe.copyCss($e,scribe.ifrmHtml,scribe.BOX_FORMATTING);
+			//scribe.copyCss($e,scribe.ifrmHtml,scribe.TEXT_FORMATTING);
+			
+			//scribe.copyCss($e,scribe.ifrmContent,scribe.BOX_FORMATTING);
+			scribe.copyCss($e,scribe.ifrmContent.addClass("wooot"),scribe.TEXT_FORMATTING);
+			
+			scribe.copyCss($e,scribe.$textarea,scribe.BOX_FORMATTING);
+			scribe.copyCss($e,scribe.$textarea,scribe.TEXT_FORMATTING);
+			scribe.$textarea.hide();
 			scribe.resize();
 
 			scribe.setSelection(scribe.ifrmContent,sel,scribe.ifrm[0].contentWindow);
