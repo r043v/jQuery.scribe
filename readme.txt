@@ -18,6 +18,7 @@ to use jquery.scribe plugin you need :
 * latest jQuery
 * wysihtml5 editor, https://github.com/xing/wysihtml5
 	with external event patch, https://github.com/r043v/wysihtml5/commit/35134ef13805c5eb9952fec93e9a018fda1d52a8
+	and copy style disabled, https://github.com/r043v/wysihtml5/commit/a869a7601edb8788617b3e2e6c272109e76338c8
 * ace source code editor, http://ace.ajax.org/
 
 optional :
@@ -35,6 +36,10 @@ $(document).ready(function()
 });
 
 scribe only wrap wysihtml5, so you need init him
+
+take note that you need pass the same style from your page in wysihtml5 for get exact same display
+
+-----------------------------------------------
 
 save, the easy way
 
@@ -93,12 +98,5 @@ here, original editable node will receive the return of your post request if you
 bugs,
 
 * chrome not fix iframe content position at top when animate
-* first position of editor will be bad if done when page is scrolled down, next are goods
-
------------------------------------------------
-
-next future,
-
-* toolbar !
  
 -----------------------------------------------
